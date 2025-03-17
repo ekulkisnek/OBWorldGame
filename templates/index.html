@@ -40,51 +40,86 @@
             position: absolute;
             image-rendering: pixelated;
             background-image: url("{{ url_for('static', filename='assets/tiles.png') }}");
-            background-size: 192px 192px; /* Adjust as needed for your tiles.png */
+            background-size: 192px 160px;
             background-repeat: no-repeat;
         }
 
-        /* Example: a 3×3 tile house (48×48) in the top-left corner of tiles.png */
         .house {
-            width: 48px;
-            height: 48px;
-            background-position: 0 0; /* Adjust if house is not at (0,0) in tiles.png */
+            width: 80px;
+            height: 64px;
+            background-position: 0 0;
         }
 
-        /* Example: a big tree that’s 2×3 tiles (32×48),
-           positioned at x=48 so it’s right next to the house, etc. */
-        .tree {
+        .tree-large {
+            width: 48px;
+            height: 64px;
+            background-position: -144px 0;
+        }
+
+        .tree-medium {
             width: 32px;
             height: 48px;
-            background-position: -48px 0; /* Adjust if needed */
+            background-position: -112px -16px;
         }
 
-        /* Example: a 16×16 rock at x=80, y=0 in tiles.png */
+        .tree-small {
+            width: 32px;
+            height: 48px;
+            background-position: -112px -64px;
+        }
+
+        .stump {
+            width: 48px;
+            height: 48px;
+            background-position: 0 -64px;
+        }
+
+        .bush-large {
+            width: 32px;
+            height: 32px;
+            background-position: -64px -64px;
+        }
+
+        .flower {
+            width: 16px;
+            height: 16px;
+            background-position: -96px -64px;
+        }
+
+        .fence-post {
+            width: 16px;
+            height: 16px;
+            background-position: -112px -64px;
+        }
+
+        .sign {
+            width: 16px;
+            height: 16px;
+            background-position: -128px -64px;
+        }
+
+        .barrel {
+            width: 16px;
+            height: 16px;
+            background-position: -96px -80px;
+        }
+
+        .well {
+            width: 16px;
+            height: 16px;
+            background-position: -112px -80px;
+        }
+
+        .candle {
+            width: 16px;
+            height: 32px;
+            background-position: -144px -80px;
+        }
+
         .rock {
             width: 16px;
             height: 16px;
-            background-position: -80px 0;
-        }
-
-        /* Example: a small tree that’s 16×24, placed at x=96, y=0 */
-        .small-tree {
-            width: 16px;
-            height: 24px;
-            background-position: -96px 0;
-        }
-
-        /* Example: a 16×16 hay bale at x=112, y=0 */
-        .hay {
-            width: 16px;
-            height: 16px;
-            background-position: -112px 0;
-        }
-
-        /* Example: a 16×16 signpost at x=128, y=0 */
-        .signpost {
-            width: 16px;
-            height: 16px;
-            background-position: -128px 0;
+            background-position: -160px -80px;
         }
     </style>
 </head>
