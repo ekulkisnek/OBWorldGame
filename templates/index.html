@@ -1,19 +1,303 @@
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
-    <!-- Replit-themed Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
-</head>
-<body>
-    <div class="container">
-        <div class="row min-vh-100 align-items-center justify-content-center">
-            <div class="col-auto text-center">
-                <h1>Hello World</h1>
-            </div>
+<!doctype html>
+<html>
+    <head>
+        <title>Pokémon-Style Game</title>
+        <style>
+            #game-container {
+                width: 320px;
+                height: 240px;
+                background-image: url("{{ url_for('static', filename='assets/grass.png') }}");
+                background-size: 16px 16px;
+                position: relative;
+                overflow: hidden;
+                border: 2px solid black;
+                image-rendering: pixelated;
+                background-color: #8bc34a; /* Fallback color if image fails */
+            }
+
+            #player {
+                width: 16px;
+                height: 16px;
+                position: absolute;
+                background-image: url("{{ url_for('static', filename='assets/pokeguy.png') }}");
+                background-size: 48px 48px; /* 3 frames x 16px width, 4 directions x 16px height */
+                background-repeat: no-repeat;
+                transition: all 0.1s;
+                z-index: 10; /* Ensure player is above tiles */
+                background-color: red; /* Fallback color if image fails */
+            }
+
+            .tile {
+                position: absolute;
+                image-rendering: pixelated;
+            }
+
+            .tree {
+                width: 32px;
+                height: 32px;
+                background-image: url("{{ url_for('static', filename='assets/tiles.png') }}");
+                background-position: -32px 0; /* Large tree position */
+                background-size: 128px 128px; /* Adjust based on sprite sheet size */
+                background-color: #2e7d32; /* Fallback color */
+            }
+
+            .house {
+                width: 48px;
+                height: 32px;
+                background-image: url("{{ url_for('static', filename='assets/tiles.png') }}");
+                background-position: 0 0; /* House position */
+                background-size: 128px 128px;
+                background-color: #4caf50; /* Fallback color */
+            }
+
+            .rock {
+                width: 32px;
+                height: 32px;
+                background-image: url("{{ url_for('static', filename='assets/tiles.png') }}");
+                background-position: -64px -32px; /* Rock position */
+                background-size: 128px 128px;
+                background-color: #8d6e63; /* Fallback color */
+            }
+
+            .small-tree {
+                width: 16px;
+                height: 16px;
+                background-image: url("{{ url_for('static', filename='assets/tiles.png') }}");
+                background-position: -96px 0; /* Small tree position */
+                background-size: 128px 128px;
+                background-color: #2e7d32; /* Fallback color */
+            }
+
+            .hay {
+                width: 16px;
+                height: 16px;
+                background-image: url("{{ url_for('static', filename='assets/tiles.png') }}");
+                background-position: -80px -64px; /* Hay bale position */
+                background-size: 128px 128px;
+                background-color: #f9a825; /* Fallback color */
+            }
+
+            .signpost {
+                width: 16px;
+                height: 16px;
+                background-image: url("{{ url_for('static', filename='assets/tiles.png') }}");
+                background-position: -96px -96px; /* Signpost position */
+                background-size: 128px 128px;
+                background-color: #795548; /* Fallback color */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="game-container">
+            <div id="player"></div>
         </div>
-    </div>
-</body>
+
+        <script>
+            const TILE_SIZE = 16;
+            const MAP_WIDTH = 20;
+            const MAP_HEIGHT = 15;
+            const ANIMATION_FRAMES = 3;
+            const ANIMATION_SPEED = 200;
+
+            class Game {
+                constructor() {
+                    this.container = document.getElementById("game-container");
+                    this.player = document.getElementById("player");
+                    this.playerX = 9;
+                    this.playerY = 7;
+                    this.facing = "down";
+                    this.currentFrame = 0;
+                    this.animationTimer = null;
+                    this.map = [];
+
+                    this.initMap();
+                    this.updatePlayerPosition();
+                    this.setupControls();
+                }
+
+                initMap() {
+                    for (let y = 0; y < MAP_HEIGHT; y++) {
+                        this.map[y] = [];
+                        for (let x = 0; x < MAP_WIDTH; x++) {
+                            this.map[y][x] = 0; // Default: walkable grass
+                        }
+                    }
+
+                    // Place house (3x2 tiles)
+                    this.placeObject(1, 1, 3, 2, 2, "house");
+
+                    // Place large trees (2x2 tiles)
+                    this.placeObject(15, 1, 2, 2, 1, "tree");
+                    this.placeObject(15, 10, 2, 2, 1, "tree");
+
+                    // Place rock formation (2x2 tiles)
+                    this.placeObject(5, 10, 2, 2, 3, "rock");
+
+                    // Place small trees (1x1 tiles)
+                    for (let i = 0; i < 3; i++) {
+                        let placed = false;
+                        while (!placed) {
+                            const x = Math.floor(Math.random() * MAP_WIDTH);
+                            const y = Math.floor(Math.random() * MAP_HEIGHT);
+                            if (
+                                this.canPlace(x, y, 1, 1) &&
+                                (x !== 9 || y !== 7)
+                            ) {
+                                this.placeObject(x, y, 1, 1, 4, "small-tree");
+                                placed = true;
+                            }
+                        }
+                    }
+
+                    // Place hay bales (1x1 tiles)
+                    for (let i = 0; i < 2; i++) {
+                        let placed = false;
+                        while (!placed) {
+                            const x = Math.floor(Math.random() * MAP_WIDTH);
+                            const y = Math.floor(Math.random() * MAP_HEIGHT);
+                            if (
+                                this.canPlace(x, y, 1, 1) &&
+                                (x !== 9 || y !== 7)
+                            ) {
+                                this.placeObject(x, y, 1, 1, 5, "hay");
+                                placed = true;
+                            }
+                        }
+                    }
+
+                    // Place signpost (1x1 tile)
+                    this.placeObject(10, 5, 1, 1, 6, "signpost");
+                }
+
+                canPlace(x, y, width, height) {
+                    for (let dy = 0; dy < height; dy++) {
+                        for (let dx = 0; dx < width; dx++) {
+                            const checkX = x + dx;
+                            const checkY = y + dy;
+                            if (
+                                checkX >= MAP_WIDTH ||
+                                checkY >= MAP_HEIGHT ||
+                                this.map[checkY][checkX] !== 0
+                            ) {
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                }
+
+                placeObject(x, y, width, height, type, className) {
+                    for (let dy = 0; dy < height; dy++) {
+                        for (let dx = 0; dx < width; dx++) {
+                            this.map[y + dy][x + dx] = type;
+                        }
+                    }
+                    const obj = document.createElement("div");
+                    obj.className = `tile ${className}`;
+                    obj.style.left = x * TILE_SIZE + "px";
+                    obj.style.top = y * TILE_SIZE + "px";
+                    this.container.appendChild(obj);
+                }
+
+                updatePlayerPosition() {
+                    this.player.style.left = this.playerX * TILE_SIZE + "px";
+                    this.player.style.top = this.playerY * TILE_SIZE + "px";
+                    this.updateAnimation();
+                }
+
+                updateAnimation() {
+                    const row = {
+                        up: 0,
+                        down: 1,
+                        left: 2,
+                        right: 3,
+                    }[this.facing];
+
+                    const frameX = (this.currentFrame % ANIMATION_FRAMES) * 16;
+                    const frameY = row * 16;
+
+                    this.player.style.backgroundPosition = `-${frameX}px -${frameY}px`;
+
+                    if (this.animationTimer) {
+                        clearTimeout(this.animationTimer);
+                    }
+                    if (this.isMoving) {
+                        this.currentFrame =
+                            (this.currentFrame + 1) % ANIMATION_FRAMES;
+                        this.animationTimer = setTimeout(
+                            () => this.updateAnimation(),
+                            ANIMATION_SPEED,
+                        );
+                    } else {
+                        this.currentFrame = 0;
+                        this.updateAnimation();
+                    }
+                }
+
+                canMove(x, y) {
+                    return (
+                        x >= 0 &&
+                        x < MAP_WIDTH &&
+                        y >= 0 &&
+                        y < MAP_HEIGHT &&
+                        this.map[y][x] === 0
+                    );
+                }
+
+                movePlayer(direction) {
+                    let newX = this.playerX;
+                    let newY = this.playerY;
+                    this.isMoving = true;
+                    this.facing = direction.replace("Arrow", "").toLowerCase();
+
+                    switch (direction) {
+                        case "ArrowUp":
+                            newY--;
+                            break;
+                        case "ArrowDown":
+                            newY++;
+                            break;
+                        case "ArrowLeft":
+                            newX--;
+                            break;
+                        case "ArrowRight":
+                            newX++;
+                            break;
+                    }
+
+                    if (this.canMove(newX, newY)) {
+                        this.playerX = newX;
+                        this.playerY = newY;
+                        this.updatePlayerPosition();
+                    } else {
+                        this.isMoving = false;
+                        this.updateAnimation();
+                    }
+                }
+
+                setupControls() {
+                    document.addEventListener("keydown", (event) => {
+                        if (
+                            [
+                                "ArrowUp",
+                                "ArrowDown",
+                                "ArrowLeft",
+                                "ArrowRight",
+                            ].includes(event.key)
+                        ) {
+                            event.preventDefault();
+                            this.movePlayer(event.key);
+                        }
+                    });
+
+                    document.addEventListener("keyup", () => {
+                        this.isMoving = false;
+                        this.updateAnimation();
+                    });
+                }
+            }
+
+            const game = new Game();
+        </script>
+    </body>
 </html>
