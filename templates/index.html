@@ -6,7 +6,7 @@
             #game-container {
                 width: 320px;
                 height: 240px;
-                background-image: url("{{ url_for('static', filename='assets/grass.png') }}");
+                background-image: url("{{ url_for('static', filename='assets/grass.svg') }}");
                 background-size: 16px 16px;
                 position: relative;
                 overflow: hidden;
@@ -109,6 +109,7 @@
                     this.currentFrame = 0;
                     this.animationTimer = null;
                     this.map = [];
+                    this.isMoving = false; // Added to track movement
 
                     this.initMap();
                     this.updatePlayerPosition();
@@ -221,16 +222,15 @@
                     if (this.animationTimer) {
                         clearTimeout(this.animationTimer);
                     }
+
                     if (this.isMoving) {
-                        this.currentFrame =
-                            (this.currentFrame + 1) % ANIMATION_FRAMES;
-                        this.animationTimer = setTimeout(
-                            () => this.updateAnimation(),
-                            ANIMATION_SPEED,
-                        );
+                        this.currentFrame = (this.currentFrame + 1) % ANIMATION_FRAMES;
+                        this.animationTimer = setTimeout(() => {
+                            requestAnimationFrame(() => this.updateAnimation());
+                        }, ANIMATION_SPEED);
                     } else {
                         this.currentFrame = 0;
-                        this.updateAnimation();
+                        this.player.style.backgroundPosition = `-${0}px -${frameY}px`;
                     }
                 }
 
