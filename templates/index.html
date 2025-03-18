@@ -40,86 +40,132 @@
             position: absolute;
             image-rendering: pixelated;
             background-image: url("{{ url_for('static', filename='assets/tiles.png') }}");
-            background-size: 192px 160px;
+            background-size: 160px 192px; 
             background-repeat: no-repeat;
         }
 
+        /* ----------------------------------------------------------
+           1) BIG HOUSE 
+           - Occupies approx. (x=0..95, y=0..79) => 96×80
+        ---------------------------------------------------------- */
         .house {
-            width: 80px;
-            height: 64px;
+            width: 94px;
+            height: 83px;
             background-position: 0 0;
         }
 
+        /* ----------------------------------------------------------
+           2) LARGE ROUND TREE 
+           - Next to the house: (x=96..143, y=0..63) => 48×64
+        ---------------------------------------------------------- */
         .tree-large {
             width: 48px;
+            height: 64px;
+            background-position: -96px 0;
+        }
+
+        /* ----------------------------------------------------------
+           3) MEDIUM TREE 
+           - (x=144..175, y=0..63) => 32×64
+           - If it looks too tall, reduce height to ~48 or shift y
+        ---------------------------------------------------------- */
+        .tree-medium {
+            width: 32px;
             height: 64px;
             background-position: -144px 0;
         }
 
-        .tree-medium {
-            width: 32px;
-            height: 48px;
-            background-position: -112px -16px;
-        }
-
+        /* ----------------------------------------------------------
+           4) SMALL TREE 
+           - (x=176..191, y=0..31) => 16×32
+           - If you see more trunk, increase height to ~48
+        ---------------------------------------------------------- */
         .tree-small {
-            width: 32px;
-            height: 48px;
-            background-position: -112px -64px;
+            width: 16px;
+            height: 32px;
+            background-position: -176px 0;
         }
 
+        /* ----------------------------------------------------------
+           5) LARGE BROWN STUMP / CLIFF
+           - Below the house: (x=0..63, y=80..143) => ~64×64
+        ---------------------------------------------------------- */
         .stump {
-            width: 48px;
-            height: 48px;
-            background-position: 0 -64px;
+            width: 64px;
+            height: 64px;
+            background-position: 0 -80px;
         }
 
+        /* ----------------------------------------------------------
+           6) LARGE GREEN BUSH / GRASS
+           - (x=64..95, y=80..111) => 32×32
+        ---------------------------------------------------------- */
         .bush-large {
             width: 32px;
             height: 32px;
-            background-position: -64px -64px;
+            background-position: -64px -80px;
         }
 
+        /* ----------------------------------------------------------
+           7) SMALL 16×16 TILES (FLOWER, FENCE, SIGN, BARREL, WELL, ETC.)
+           - Typically in the row from y=80 to y=95 or below
+           - We'll place them in 16×16 blocks along x=96..160
+        ---------------------------------------------------------- */
+
+        /* a) FLOWER at (x=96, y=80) => 16×16 */
         .flower {
-            width: 16px;
-            height: 16px;
-            background-position: -96px -64px;
-        }
-
-        .fence-post {
-            width: 16px;
-            height: 16px;
-            background-position: -112px -64px;
-        }
-
-        .sign {
-            width: 16px;
-            height: 16px;
-            background-position: -128px -64px;
-        }
-
-        .barrel {
             width: 16px;
             height: 16px;
             background-position: -96px -80px;
         }
 
-        .well {
+        /* b) FENCE POST at (x=112, y=80) => 16×16 */
+        .fence-post {
             width: 16px;
             height: 16px;
             background-position: -112px -80px;
         }
 
-        .candle {
+        /* c) SIGN at (x=128, y=80) => 16×16 */
+        .sign {
             width: 16px;
-            height: 32px;
+            height: 16px;
+            background-position: -128px -80px;
+        }
+
+        /* d) BARREL at (x=144, y=80) => 16×16 */
+        .barrel {
+            width: 16px;
+            height: 16px;
             background-position: -144px -80px;
         }
 
-        .rock {
+        /* e) WELL at (x=160, y=80) => 16×16 */
+        .well {
             width: 16px;
             height: 16px;
             background-position: -160px -80px;
+        }
+
+        /* ----------------------------------------------------------
+           8) TALL OBJECT (CANDLE / TORCH), ~16×32
+           - Possibly at (x=176, y=80) => 16×32
+        ---------------------------------------------------------- */
+        .candle {
+            width: 16px;
+            height: 32px;
+            background-position: -176px -80px;
+        }
+
+        /* ----------------------------------------------------------
+           9) SMALL ROCK, or any leftover 16×16 item
+           - For example, at (x=0, y=144), or wherever you see it
+        ---------------------------------------------------------- */
+        .rock {
+            width: 16px;
+            height: 16px;
+            /* If the rock is at (0,144): */
+            background-position: 0 -144px;
         }
     </style>
 </head>
