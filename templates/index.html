@@ -40,9 +40,11 @@
             height: 16px;
             position: absolute;
             background-image: url("{{ url_for('static', filename='assets/pokeguy.png') }}");
-            background-size: 64px 64px; 
+            background-size: 64px 64px;
             background-repeat: no-repeat;
+            background-position: 0 0;
             z-index: 10;
+            pointer-events: none;
         }
 
         .enemy {
