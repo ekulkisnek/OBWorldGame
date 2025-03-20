@@ -9,6 +9,34 @@ class Player {
         this.animationTimer = null;
         this.isMoving = false;
         this.moveSpeed = 1.5;
+        this.health = 100;
+        this.isAttacking = false;
+        this.attackCooldown = false;
+    }
+
+    attack() {
+        if (!this.attackCooldown) {
+            this.isAttacking = true;
+            this.element.style.backgroundColor = 'yellow';
+            setTimeout(() => {
+                this.isAttacking = false;
+                this.element.style.backgroundColor = '';
+                this.attackCooldown = true;
+                setTimeout(() => this.attackCooldown = false, 500);
+            }, 200);
+        }
+    }
+
+    takeDamage() {
+        if (!this.isAttacking) {
+            this.health -= 10;
+            this.element.style.backgroundColor = 'red';
+            setTimeout(() => this.element.style.backgroundColor = '', 200);
+            if (this.health <= 0) {
+                alert('Game Over!');
+                window.location.reload();
+            }
+        }
     }
 
     updateDOMPosition() {

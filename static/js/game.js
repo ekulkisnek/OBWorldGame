@@ -1,20 +1,21 @@
-
 import Player from './player.js';
 import GameMap from './map.js';
+import Enemy from './enemy.js'; // Added import for Enemy class
 
 class Game {
     constructor() {
         this.container = document.getElementById("game-container");
         this.playerElement = document.getElementById("player");
-        
+
         this.player = new Player(this.playerElement);
         this.gameMap = new GameMap(this.container);
-        
+        this.enemies = [new Enemy(this.container, this.player)]; // Initialize enemies
+
         this.keys = { up: false, down: false, left: false, right: false };
-        
+
         this.setupControls();
         this.player.updateDOMPosition();
-        
+
         requestAnimationFrame(() => this.gameLoop());
     }
 
@@ -36,6 +37,9 @@ class Game {
                 case "ArrowRight":
                     event.preventDefault();
                     this.keys.right = true;
+                    break;
+                case " ": // Added spacebar for attack
+                    this.player.attack();
                     break;
             }
         });
@@ -93,6 +97,14 @@ class Game {
         if (this.gameMap.canMovePixel(this.player.x, newY)) {
             this.player.y = newY;
         }
+
+        // Update enemies
+        this.enemies.forEach(enemy => {
+            if (enemy.update()) {
+                this.player.takeDamage();
+            }
+        });
+
 
         this.player.updateDOMPosition();
 
