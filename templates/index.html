@@ -11,26 +11,16 @@
             height: 100vh;
             background-image: url("{{ url_for('static', filename='assets/grass.svg') }}");
             background-size: 16px 16px;
-            background-repeat: repeat;
             position: relative;
             overflow: hidden;
             image-rendering: pixelated;
-            background-color: #8bc34a;
-            margin: 0;
-            padding: 0;
+            background-color: #8bc34a; /* Fallback color */
         }
 
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
-            background-color: #8bc34a;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
         }
 
         /* The player’s sprite sheet is 4 frames across × 4 rows (64×64).
@@ -40,20 +30,9 @@
             height: 16px;
             position: absolute;
             background-image: url("{{ url_for('static', filename='assets/pokeguy.png') }}");
-            background-size: 64px 64px;
+            background-size: 64px 64px; 
             background-repeat: no-repeat;
-            background-position: 0 0;
             z-index: 10;
-            pointer-events: none;
-        }
-
-        .enemy {
-            width: 16px;
-            height: 16px;
-            position: absolute;
-            background-color: red;
-            border-radius: 50%;
-            z-index: 9;
         }
 
         /* ----------------------------------------------------------
