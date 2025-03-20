@@ -67,7 +67,7 @@ class Enemy {
         if (this.health <= 0) {
             if (this.element.style.display !== "none") {
                 this.element.style.display = "none";
-                setTimeout(() => this.respawn(), 1000);
+                setTimeout(() => this.respawn(), 3000);
             }
             return;
         }
