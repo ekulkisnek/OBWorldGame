@@ -44,6 +44,10 @@ class Game {
                     event.preventDefault();
                     this.keys.right = true;
                     break;
+                case " ":
+                    event.preventDefault();
+                    this.player.attack(this.enemy);
+                    break;
             }
         });
 

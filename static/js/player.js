@@ -53,4 +53,17 @@ class Player {
     }
 }
 
+attack(enemy) {
+        const dx = enemy.x - this.x;
+        const dy = enemy.y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const attackRange = 30;
+        
+        if (distance <= attackRange) {
+            enemy.health -= 20;
+            enemy.healthBarFill.style.width = enemy.health + "%";
+        }
+    }
+}
+
 export default Player;
