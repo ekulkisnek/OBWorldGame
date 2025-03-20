@@ -1,4 +1,6 @@
 
+import Projectile from './projectile.js';
+
 class Player {
     constructor(element) {
         this.element = element;

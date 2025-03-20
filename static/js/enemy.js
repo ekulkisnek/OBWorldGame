@@ -1,3 +1,5 @@
+import Projectile from './projectile.js';
+
 class Enemy {
     constructor(element, playerRef) {
         this.element = element;
