@@ -2,6 +2,7 @@
 import Player from './player.js';
 import Enemy from './enemy.js';
 import GameMap from './map.js';
+import Projectile from './projectile.js';
 
 class Game {
     constructor() {
@@ -110,6 +111,43 @@ class Game {
         if (this.player.isMoving && !this.player.animationTimer) {
             this.player.updateAnimation();
         }
+
+        // Update and check projectiles
+        const projectiles = document.querySelectorAll('.projectile');
+        projectiles.forEach(projectileElement => {
+            const projectile = projectileElement.projectileObj;
+            if (!projectile) return;
+            
+            projectile.update();
+            
+            // Check if projectile is off screen
+            if (projectile.x < 0 || projectile.x > window.innerWidth || 
+                projectile.y < 0 || projectile.y > window.innerHeight) {
+                projectile.remove();
+                return;
+            }
+            
+            // Check for collisions
+            if (!projectile.isEnemy) {
+                const dx = projectile.x - this.enemy.x;
+                const dy = projectile.y - this.enemy.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 20) {
+                    this.enemy.health -= 20;
+                    this.enemy.healthBarFill.style.width = this.enemy.health + "%";
+                    projectile.remove();
+                }
+            } else {
+                const dx = projectile.x - this.player.x;
+                const dy = projectile.y - this.player.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 20) {
+                    this.player.health -= 10;
+                    this.player.healthBarFill.style.width = this.player.health + "%";
+                    projectile.remove();
+                }
+            }
+        });
 
         this.enemy.update();
         requestAnimationFrame(() => this.gameLoop());

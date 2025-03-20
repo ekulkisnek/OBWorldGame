@@ -1,4 +1,3 @@
-
 class Enemy {
     constructor(element, playerRef) {
         this.element = element;
@@ -12,7 +11,7 @@ class Enemy {
         this.moveSpeed = 1.0;
         this.detectionRadius = 100;
         this.health = 100;
-        
+
         this.healthBar = document.createElement('div');
         this.healthBar.className = 'health-bar';
         this.healthBarFill = document.createElement('div');
@@ -63,11 +62,15 @@ class Enemy {
         this.updateDOMPosition();
     }
 
+    attack() {
+        new Projectile(this.x, this.y, this.facing, true);
+    }
+
     update() {
         if (this.health <= 0) {
             if (this.element.style.display !== "none") {
                 this.element.style.display = "none";
-                setTimeout(() => this.respawn(), 3000);
+                setTimeout(() => this.respawn(), 1000);
             }
             return;
         }
@@ -75,6 +78,10 @@ class Enemy {
         const dx = this.playerRef.x - this.x;
         const dy = this.playerRef.y - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < this.detectionRadius && Math.random() < 0.01) {
+            this.attack();
+        }
 
         this.isMoving = false;
 

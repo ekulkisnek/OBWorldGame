@@ -155,16 +155,29 @@
         }
 
         .health-bar-fill {
-            width: 100%;
             height: 100%;
-            background: #2ecc71;
-            transition: width 0.2s ease;
+            width: 100%;
+            background: #00FF00;
+        }
+
+        .projectile {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #FFD700;
+            border-radius: 50%;
+            z-index: 5;
+        }
+
+        .enemy-projectile {
+            background: #FF4444;
         }
     </style>
 </head>
 <body>
     <div id="game-container">
         <div id="player"></div>
+        <div id="enemy"></div>
     </div>
 
     <script type="module">
@@ -178,7 +191,7 @@
         window.ANIMATION_SPEED = 150;    // ms between animation frames
 
         import Game from '/static/js/game.js';
-        
+
         /* ----------------------------------------------------------
            LAUNCH GAME
         ---------------------------------------------------------- */
@@ -186,7 +199,6 @@
             new Game();
         });
     </script>
-            
-    </script>
+
 </body>
 </html>
