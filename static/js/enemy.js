@@ -54,7 +54,22 @@ class Enemy {
         }
     }
 
+    respawn() {
+        this.health = 100;
+        this.healthBarFill.style.width = "100%";
+        this.x = Math.random() * (window.innerWidth - TILE_SIZE);
+        this.y = Math.random() * (window.innerHeight - TILE_SIZE);
+        this.element.style.display = "block";
+        this.updateDOMPosition();
+    }
+
     update() {
+        if (this.health <= 0) {
+            this.element.style.display = "none";
+            setTimeout(() => this.respawn(), 1000);
+            return;
+        }
+
         const dx = this.playerRef.x - this.x;
         const dy = this.playerRef.y - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
