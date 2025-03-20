@@ -63,7 +63,8 @@ class Enemy {
     }
 
     attack() {
-        new Projectile(this.x, this.y, this.facing, true);
+        const projectile = new Projectile(this.x, this.y, this.facing, true);
+        projectile.element.projectileObj = projectile;
     }
 
     update() {
@@ -72,6 +73,10 @@ class Enemy {
                 this.element.style.display = "none";
                 setTimeout(() => this.respawn(), 1000);
             }
+            return;
+        }
+
+        if (this.element.style.display === "none") {
             return;
         }
 

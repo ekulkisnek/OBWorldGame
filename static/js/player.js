@@ -53,7 +53,8 @@ class Player {
     }
 
     attack(enemy) {
-        new Projectile(this.x, this.y, this.facing, false);
+        const projectile = new Projectile(this.x, this.y, this.facing, false);
+        projectile.element.projectileObj = projectile;
     }
 }
 
