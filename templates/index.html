@@ -35,6 +35,16 @@
             z-index: 10;
         }
 
+        #enemy {
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            background-image: url("{{ url_for('static', filename='assets/pokeguy.png') }}");
+            background-size: 64px 64px;
+            background-repeat: no-repeat;
+            z-index: 10;
+        }
+
         /* ----------------------------------------------------------
            OBJECT TILES (HOUSE, TREES, ETC.)
            Adjust background-size to match your actual tiles.png dimension.

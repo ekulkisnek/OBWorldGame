@@ -1,5 +1,6 @@
 
 import Player from './player.js';
+import Enemy from './enemy.js';
 import GameMap from './map.js';
 
 class Game {
@@ -9,6 +10,12 @@ class Game {
         
         this.player = new Player(this.playerElement);
         this.gameMap = new GameMap(this.container);
+
+        const enemyElement = document.createElement("div");
+        enemyElement.id = "enemy";
+        enemyElement.style.cssText = this.playerElement.style.cssText;
+        this.container.appendChild(enemyElement);
+        this.enemy = new Enemy(enemyElement, this.player);
         
         this.keys = { up: false, down: false, left: false, right: false };
         
@@ -100,6 +107,7 @@ class Game {
             this.player.updateAnimation();
         }
 
+        this.enemy.update();
         requestAnimationFrame(() => this.gameLoop());
     }
 }
