@@ -8,15 +8,11 @@ class Game {
     constructor() {
         this.container = document.getElementById("game-container");
         this.playerElement = document.getElementById("player");
+        this.enemyElement = document.getElementById("enemy");
         
         this.player = new Player(this.playerElement);
         this.gameMap = new GameMap(this.container);
-
-        const enemyElement = document.createElement("div");
-        enemyElement.id = "enemy";
-        enemyElement.style.cssText = this.playerElement.style.cssText;
-        this.container.appendChild(enemyElement);
-        this.enemy = new Enemy(enemyElement, this.player);
+        this.enemy = new Enemy(this.enemyElement, this.player);
         
         this.keys = { up: false, down: false, left: false, right: false };
         
