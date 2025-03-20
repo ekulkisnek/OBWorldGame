@@ -51,9 +51,8 @@ class Player {
             this.updateAnimation();
         }
     }
-}
 
-attack(enemy) {
+    attack(enemy) {
         const dx = enemy.x - this.x;
         const dy = enemy.y - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
