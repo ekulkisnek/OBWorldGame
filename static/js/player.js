@@ -9,6 +9,14 @@ class Player {
         this.animationTimer = null;
         this.isMoving = false;
         this.moveSpeed = 1.5;
+        this.health = 100;
+        
+        this.healthBar = document.createElement('div');
+        this.healthBar.className = 'health-bar';
+        this.healthBarFill = document.createElement('div');
+        this.healthBarFill.className = 'health-bar-fill';
+        this.healthBar.appendChild(this.healthBarFill);
+        this.element.appendChild(this.healthBar);
     }
 
     updateDOMPosition() {
