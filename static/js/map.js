@@ -13,7 +13,9 @@ class GameMap {
                 this.map[y][x] = 0;
             }
         }
-
+        
+        // Objects temporarily hidden
+        /*
         this.placeObject(1, 1, 3, 3, 2, "house");
         this.placeObject(15, 1, 2, 3, 1, "tree");
         this.placeObject(15, 10, 2, 3, 1, "tree");
@@ -28,6 +30,7 @@ class GameMap {
         }
 
         this.placeObject(10, 5, 1, 1, 6, "signpost");
+        */
     }
 
     placeRandomObject(width, height, type, className) {

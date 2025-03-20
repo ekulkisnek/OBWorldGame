@@ -7,15 +7,20 @@
            GAME CONTAINER & PLAYER
         ---------------------------------------------------------- */
         #game-container {
-            width: 320px;
-            height: 240px;
+            width: 100vw;
+            height: 100vh;
             background-image: url("{{ url_for('static', filename='assets/grass.svg') }}");
             background-size: 16px 16px;
             position: relative;
             overflow: hidden;
-            border: 2px solid black;
             image-rendering: pixelated;
             background-color: #8bc34a; /* Fallback color */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
         }
 
         /* The player’s sprite sheet is 4 frames across × 4 rows (64×64).
@@ -139,8 +144,8 @@
            CONFIG CONSTANTS (Global)
         ---------------------------------------------------------- */
         window.TILE_SIZE = 16;           // Each map tile is 16×16
-        window.MAP_WIDTH = 20;           // 20 tiles wide
-        window.MAP_HEIGHT = 15;          // 15 tiles tall
+        window.MAP_WIDTH = Math.ceil(window.innerWidth / TILE_SIZE);    // Fill screen width
+        window.MAP_HEIGHT = Math.ceil(window.innerHeight / TILE_SIZE);  // Fill screen height
         window.ANIMATION_FRAMES = 4;     // 4 walking frames per direction
         window.ANIMATION_SPEED = 150;    // ms between animation frames
 
