@@ -12,6 +12,8 @@ class Player {
         this.isMoving = false;
         this.moveSpeed = 1.5;
         this.health = 100;
+        this.isAlive = true;
+        this.regenRate = 0.1;
         
         this.healthBar = document.createElement('div');
         this.healthBar.className = 'health-bar';
@@ -19,6 +21,32 @@ class Player {
         this.healthBarFill.className = 'health-bar-fill';
         this.healthBar.appendChild(this.healthBarFill);
         this.element.appendChild(this.healthBar);
+    }
+
+    respawn() {
+        this.health = 100;
+        this.isAlive = true;
+        this.x = Math.random() * (window.innerWidth - TILE_SIZE);
+        this.y = Math.random() * (window.innerHeight - TILE_SIZE);
+        this.element.style.display = "block";
+        this.healthBarFill.style.width = "100%";
+        this.updateDOMPosition();
+    }
+
+    update() {
+        if (this.health <= 0 && this.isAlive) {
+            this.isAlive = false;
+            this.element.style.display = "none";
+            setTimeout(() => this.respawn(), 1000);
+            return;
+        }
+
+        if (!this.isAlive) return;
+
+        if (this.health < 100) {
+            this.health = Math.min(100, this.health + this.regenRate);
+            this.healthBarFill.style.width = this.health + "%";
+        }
     }
 
     updateDOMPosition() {

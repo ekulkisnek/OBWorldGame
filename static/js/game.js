@@ -103,9 +103,21 @@ class Game {
         }
 
         this.player.updateDOMPosition();
+        this.player.update();
 
         if (this.player.isMoving && !this.player.animationTimer) {
             this.player.updateAnimation();
+        }
+
+        // Check for collision with enemy
+        if (this.player.isAlive && this.enemy.health > 0) {
+            const dx = this.player.x - this.enemy.x;
+            const dy = this.player.y - this.enemy.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < 20) {
+                this.player.health = 0;
+                this.player.healthBarFill.style.width = "0%";
+            }
         }
 
         // Update and check projectiles
